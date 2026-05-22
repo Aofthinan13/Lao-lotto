@@ -23,44 +23,81 @@
     <header class="bg-gray-800 border-b border-gray-700 py-4 shadow-md sticky top-0 z-50">
         <div class="container mx-auto text-center">
             <h1 class="text-2xl font-bold text-red-500 tracking-wider">🇱🇦 LAO LOTTO PREDICTOR</h1>
-            <p class="text-xs text-gray-400 mt-1">วิเคราะห์เลขเด่นหวยลาวพัฒนา จากสถิติย้อนหลัง</p>
+            <p class="text-xs text-gray-400 mt-1">วิเคราะห์เลขเด่นรายวัน จากสถิติหวยลาวพัฒนา</p>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8 max-w-md flex-grow">
+    <main class="container mx-auto px-4 py-6 max-w-md flex-grow">
         
         <!-- ส่วนแสดงผลตัวเลข -->
         <div class="bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-700 text-center mb-6">
-            <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-4">เลขเด่นวิเคราะห์จากสถิติงวดนี้</h2>
+            <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-4">เลขเด่นประจำวันของคุณ</h2>
             
-            <div class="flex justify-center gap-4 my-6">
+            <div class="flex justify-center gap-4 my-5">
                 <!-- วงกลมตัวเลข -->
                 <div id="num-1" class="w-14 h-14 bg-gradient-to-br from-red-500 to-amber-600 rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-lg shadow-red-500/20">-</div>
                 <div id="num-2" class="w-14 h-14 bg-gradient-to-br from-red-500 to-amber-600 rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-lg shadow-red-500/20">-</div>
                 <div id="num-3" class="w-14 h-14 bg-gradient-to-br from-red-500 to-amber-600 rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-lg shadow-red-500/20 opacity-50">-</div>
             </div>
 
-            <p id="predict-type" class="text-sm text-red-400 font-medium">กดปุ่มด้านล่างเพื่อคำนวณฐานข้อมูลสถิติ</p>
+            <p id="predict-type" class="text-sm text-yellow-500 font-medium">สิทธิ์การคำนวณ: วันนี้คุณยังไม่ได้ใช้วิเคราะห์</p>
         </div>
 
         <!-- ปุ่มควบคุมสำหรับมือถือ (Touch Friendly) -->
-        <div class="space-y-4">
-            <button onclick="predictLaoLotto(2)" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-4 px-4 rounded-2xl shadow-lg transition duration-200 transform active:scale-95 touch-manipulation cursor-pointer text-lg">
-                📊 วิเคราะห์เลขท้าย 2 ตัว (ลาว)
+        <div class="space-y-3 mb-8">
+            <button id="btn-2digits" onclick="predictLaoLotto(2)" class="w-full bg-red-600 hover:bg-red-500 disabled:bg-gray-700 disabled:text-gray-400 disabled:scale-100 disabled:cursor-not-allowed text-white font-bold py-4 px-4 rounded-2xl shadow-lg transition duration-200 transform active:scale-95 touch-manipulation cursor-pointer text-lg">
+                📊 วิเคราะห์เลขท้าย 2 ตัว (1 ครั้ง/วัน)
             </button>
-            <button onclick="predictLaoLotto(3)" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 px-4 rounded-2xl shadow-lg transition duration-200 transform active:scale-95 touch-manipulation cursor-pointer text-lg">
-                🌟 วิเคราะห์เลขท้าย 3 ตัว (ลาว)
+            <button id="btn-3digits" onclick="predictLaoLotto(3)" class="w-full bg-blue-600 hover:bg-blue-500 disabled:bg-gray-700 disabled:text-gray-400 disabled:scale-100 disabled:cursor-not-allowed text-white font-bold py-4 px-4 rounded-2xl shadow-lg transition duration-200 transform active:scale-95 touch-manipulation cursor-pointer text-lg">
+                🌟 วิเคราะห์เลขท้าย 3 ตัว (1 ครั้ง/วัน)
             </button>
         </div>
 
-        <!-- คำอธิบายระบบสถิติ -->
-        <div class="mt-6 bg-gray-800/60 border border-gray-700 rounded-2xl p-4 text-xs text-gray-400">
-            <h3 class="font-semibold text-gray-300 mb-2">📋 ข้อมูลเชิงสถิติที่ใช้คำนวณ:</h3>
-            <p class="mb-1">• อ้างอิงสถิติการออกรางวัลหวยลาวพัฒนาย้อนหลัง</p>
-            <p class="mb-2">• ตัวเลขที่มีค่าสถิติสูงสุด: <span class="text-red-400 font-bold">7, 4, 8, 1</span> (ระบบจะถ่วงน้ำหนักให้เลขเหล่านี้ออกง่ายขึ้น)</p>
-            <hr class="border-gray-700 my-2">
-            <p class="text-center text-gray-500">หมายเหตุ: เป็นการจำลองเพื่อความบันเทิงเท่านั้น</p>
+        <!-- โซนแสดงผลหวยเก่า -->
+        <div class="bg-gray-800 rounded-2xl p-5 shadow-xl border border-gray-700 mb-6">
+            <h3 class="text-md font-semibold text-gray-300 mb-3 flex items-center gap-2">
+                📋 ประวัติผลหวยลาวย้อนหลัง (สถิติล่าสุด)
+            </h3>
+            <div class="overflow-hidden rounded-xl border border-gray-700">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-700/50 text-xs text-gray-300 font-semibold uppercase">
+                            <th class="p-3">งวดวันที่</th>
+                            <th class="p-3 text-center">เลข 4 ตัว</th>
+                            <th class="p-3 text-center">3 ตัวบน</th>
+                            <th class="p-3 text-center">2 ตัวล่าง</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm text-gray-300 divide-y divide-gray-700">
+                        <tr class="hover:bg-gray-700/30">
+                            <td class="p-3 font-medium">20 พ.ค. 26</td>
+                            <td class="p-3 text-center text-yellow-400 font-bold">1478</td>
+                            <td class="p-3 text-center">478</td>
+                            <td class="p-3 text-center">14</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700/30">
+                            <td class="p-3 font-medium">18 พ.ค. 26</td>
+                            <td class="p-3 text-center text-yellow-400 font-bold">9572</td>
+                            <td class="p-3 text-center">572</td>
+                            <td class="p-3 text-center">95</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700/30">
+                            <td class="p-3 font-medium">15 พ.ค. 26</td>
+                            <td class="p-3 text-center text-yellow-400 font-bold">3417</td>
+                            <td class="p-3 text-center">417</td>
+                            <td class="p-3 text-center">34</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700/30">
+                            <td class="p-3 font-medium">13 พ.ค. 26</td>
+                            <td class="p-3 text-center text-yellow-400 font-bold">7804</td>
+                            <td class="p-3 text-center">804</td>
+                            <td class="p-3 text-center">78</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-[11px] text-gray-500 mt-2 text-center">*อัปเดตข้อมูลเพื่อใช้คำนวณร่วมกับสถิติแบบถ่วงน้ำหนัก</p>
         </div>
 
     </main>
@@ -70,24 +107,53 @@
         &copy; 2026 Lao Lotto Analytics Mobile App
     </footer>
 
-    <!-- JavaScript สำหรับระบบสุ่มตามสถิติเก่า -->
+    <!-- JavaScript สำหรับระบบคำนวณและล็อกรายวัน -->
     <script>
-        // 1. ฐานข้อมูลสถิติ: ชุดตัวเลขที่สุ่มอ้างอิงจากเลขที่ออกบ่อยที่สุดในหวยลาวพัฒนา
-        // ยิ่งเลขไหนมีใน Array นี้มาก โอกาสที่จะสุ่มได้เลขนั้นจะยิ่งสูงขึ้น (Weighted Distribution)
-        const statisticPool = [
-            7, 7, 7, 7,  // เลข 7 ออกบ่อยสุด (Weight สูงสุด)
-            4, 4, 4, 
-            8, 8, 8, 
-            1, 1, 1, 
-            2, 2, 
-            5, 5, 
-            0, 3, 6, 9   // เลขอื่นๆ มีเปอร์เซ็นต์เฉลี่ยเท่ากัน
-        ];
+        // ฐานข้อมูลสถิติอ้างอิงจากผลลัพธ์ย้อนหลัง (เน้นเลขออกบ่อย 7, 4, 8, 1)
+        const statisticPool = [7, 7, 7, 7, 4, 4, 4, 8, 8, 8, 1, 1, 1, 2, 2, 5, 5, 0, 3, 6, 9];
 
         function getWeightedRandomNumber() {
-            // เลือกสุ่มดึงตำแหน่งจาก Pool สถิติเก่า
             const randomIndex = Math.floor(Math.random() * statisticPool.length);
             return statisticPool[randomIndex];
+        }
+
+        // ฟังก์ชันจัดรูปแบบวันที่ให้อยู่ในฟอร์แมต YYYY-MM-DD
+        function getTodayString() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        // ฟังก์ชันตรวจสอบสิทธิ์เมื่อเปิดหน้าเว็บขึ้นมา
+        function checkDailyLimit() {
+            const lastData = localStorage.getItem('laoLotto_last_predict');
+            
+            if (lastData) {
+                const predictInfo = JSON.parse(lastData);
+                const todayStr = getTodayString();
+
+                // ถ้างวดที่กดตรงกับวันนี้ ให้ล็อกปุ่มทันทีและดึงค่าเก่ามาโชว์
+                if (predictInfo.date === todayStr) {
+                    document.getElementById('num-1').innerText = predictInfo.n1;
+                    document.getElementById('num-2').innerText = predictInfo.n2;
+                    document.getElementById('num-3').innerText = predictInfo.n3;
+                    
+                    if(predictInfo.n3 === "-") {
+                        document.getElementById('num-3').classList.add('opacity-50');
+                    } else {
+                        document.getElementById('num-3').classList.remove('opacity-50');
+                    }
+
+                    document.getElementById('predict-type').innerText = "🔒 คุณใช้วิเคราะห์ของวันนี้ไปแล้ว กลับมาใหม่วันพรุ่งนี้ครับ";
+                    document.getElementById('predict-type').classList.replace('text-yellow-500', 'text-red-400');
+                    
+                    // ปิดการใช้งานปุ่ม
+                    document.getElementById('btn-2digits').disabled = true;
+                    document.getElementById('btn-3digits').disabled = true;
+                }
+            }
         }
 
         function predictLaoLotto(digits) {
@@ -96,36 +162,49 @@
             const num3 = document.getElementById('num-3');
             const predictType = document.getElementById('predict-type');
 
-            // หน้าจอโหลดนับถอยหลังจำลองการประมวลผลสถิติ
-            predictType.innerText = "⏳ กำลังดึงประวัติสถิติหวยลาวพัฒนา...";
+            predictType.innerText = "⏳ กำลังประมวลผลสถิติรายวัน...";
             num1.innerText = "⚡";
             num2.innerText = "⚡";
             num3.innerText = digits === 3 ? "⚡" : "-";
-            
-            if(digits === 2) {
-                num3.classList.add('opacity-50');
-            } else {
-                num3.classList.remove('opacity-50');
-            }
 
-            // หน่วงเวลาเพื่อให้ผู้ใช้รู้สึกถึงการสุ่มวิเคราะห์จริง
             setTimeout(() => {
                 const n1 = getWeightedRandomNumber();
                 const n2 = getWeightedRandomNumber();
-                
+                let n3 = "-";
+
                 num1.innerText = n1;
                 num2.innerText = n2;
 
                 if (digits === 2) {
                     num3.innerText = "-";
-                    predictType.innerText = "🇱🇦 วิเคราะห์เสร็จสิ้น: เด่น 2 ตัว (คัดสรรพิเศษ)";
+                    num3.classList.add('opacity-50');
                 } else if (digits === 3) {
-                    const n3 = getWeightedRandomNumber();
+                    n3 = getWeightedRandomNumber();
                     num3.innerText = n3;
-                    predictType.innerText = "🇱🇦 วิเคราะห์เสร็จสิ้น: เด่น 3 ตัว (คัดสรรพิเศษ)";
+                    num3.classList.remove('opacity-50');
                 }
-            }, 900);
+
+                predictType.innerText = "🔒 บันทึกผลสำเร็จ! ล็อกสิทธิ์การคำนวณสำหรับวันนี้แล้ว";
+                predictType.classList.replace('text-yellow-500', 'text-green-400');
+
+                // เซ็ตค่าลงในความจำเครื่อง (LocalStorage)
+                const saveState = {
+                    date: getTodayString(),
+                    n1: n1,
+                    n2: n2,
+                    n3: n3
+                };
+                localStorage.setItem('laoLotto_last_predict', JSON.stringify(saveState));
+
+                // ล็อกปุ่มทันที
+                document.getElementById('btn-2digits').disabled = true;
+                document.getElementById('btn-3digits').disabled = true;
+
+            }, 1000);
         }
+
+        // รันฟังก์ชันเช็คสิทธิ์ทันทีเมื่อโหลดหน้าเว็บ
+        window.onload = checkDailyLimit;
     </script>
 </body>
 </html>

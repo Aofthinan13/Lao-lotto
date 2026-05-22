@@ -1,210 +1,372 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lao Lotto Predictor - แอปวิเคราะห์หวยลาว</title>
-    <!-- โหมด Mobile App App-like Experience -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#111827">
-    
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Prompt', sans-serif; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Lao Lotto Predictor</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+body{
+font-family:'Prompt',sans-serif;
+}
+</style>
+
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col justify-between">
 
-    <!-- Header -->
-    <header class="bg-gray-800 border-b border-gray-700 py-4 shadow-md sticky top-0 z-50">
-        <div class="container mx-auto text-center">
-            <h1 class="text-2xl font-bold text-red-500 tracking-wider">🇱🇦 LAO LOTTO PREDICTOR</h1>
-            <p class="text-xs text-gray-400 mt-1">วิเคราะห์เลขเด่นรายวัน จากสถิติหวยลาวพัฒนา</p>
-        </div>
-    </header>
+<body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col">
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 py-6 max-w-md flex-grow">
-        
-        <!-- ส่วนแสดงผลตัวเลข -->
-        <div class="bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-700 text-center mb-6">
-            <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-4">เลขเด่นประจำวันของคุณ</h2>
-            
-            <div class="flex justify-center gap-4 my-5">
-                <!-- วงกลมตัวเลข -->
-                <div id="num-1" class="w-14 h-14 bg-gradient-to-br from-red-500 to-amber-600 rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-lg shadow-red-500/20">-</div>
-                <div id="num-2" class="w-14 h-14 bg-gradient-to-br from-red-500 to-amber-600 rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-lg shadow-red-500/20">-</div>
-                <div id="num-3" class="w-14 h-14 bg-gradient-to-br from-red-500 to-amber-600 rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-lg shadow-red-500/20 opacity-50">-</div>
-            </div>
+<header class="bg-gray-800 border-b border-gray-700 py-4 text-center">
+<h1 class="text-2xl font-bold text-red-500">
+🇱🇦 LAO LOTTO PREDICTOR
+</h1>
 
-            <p id="predict-type" class="text-sm text-yellow-500 font-medium">สิทธิ์การคำนวณ: วันนี้คุณยังไม่ได้ใช้วิเคราะห์</p>
-        </div>
+<p class="text-gray-400 text-sm">
+วิเคราะห์เลขลาว
+</p>
+</header>
 
-        <!-- ปุ่มควบคุมสำหรับมือถือ (Touch Friendly) -->
-        <div class="space-y-3 mb-8">
-            <button id="btn-2digits" onclick="predictLaoLotto(2)" class="w-full bg-red-600 hover:bg-red-500 disabled:bg-gray-700 disabled:text-gray-400 disabled:scale-100 disabled:cursor-not-allowed text-white font-bold py-4 px-4 rounded-2xl shadow-lg transition duration-200 transform active:scale-95 touch-manipulation cursor-pointer text-lg">
-                📊 วิเคราะห์เลขท้าย 2 ตัว (1 ครั้ง/วัน)
-            </button>
-            <button id="btn-3digits" onclick="predictLaoLotto(3)" class="w-full bg-blue-600 hover:bg-blue-500 disabled:bg-gray-700 disabled:text-gray-400 disabled:scale-100 disabled:cursor-not-allowed text-white font-bold py-4 px-4 rounded-2xl shadow-lg transition duration-200 transform active:scale-95 touch-manipulation cursor-pointer text-lg">
-                🌟 วิเคราะห์เลขท้าย 3 ตัว (1 ครั้ง/วัน)
-            </button>
-        </div>
+<main class="flex-grow max-w-md mx-auto p-4">
 
-        <!-- โซนแสดงผลหวยเก่า -->
-        <div class="bg-gray-800 rounded-2xl p-5 shadow-xl border border-gray-700 mb-6">
-            <h3 class="text-md font-semibold text-gray-300 mb-3 flex items-center gap-2">
-                📋 ประวัติผลหวยลาวย้อนหลัง (สถิติล่าสุด)
-            </h3>
-            <div class="overflow-hidden rounded-xl border border-gray-700">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-gray-700/50 text-xs text-gray-300 font-semibold uppercase">
-                            <th class="p-3">งวดวันที่</th>
-                            <th class="p-3 text-center">เลข 4 ตัว</th>
-                            <th class="p-3 text-center">3 ตัวบน</th>
-                            <th class="p-3 text-center">2 ตัวล่าง</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-sm text-gray-300 divide-y divide-gray-700">
-                        <tr class="hover:bg-gray-700/30">
-                            <td class="p-3 font-medium">20 พ.ค. 26</td>
-                            <td class="p-3 text-center text-yellow-400 font-bold">1478</td>
-                            <td class="p-3 text-center">478</td>
-                            <td class="p-3 text-center">14</td>
-                        </tr>
-                        <tr class="hover:bg-gray-700/30">
-                            <td class="p-3 font-medium">18 พ.ค. 26</td>
-                            <td class="p-3 text-center text-yellow-400 font-bold">9572</td>
-                            <td class="p-3 text-center">572</td>
-                            <td class="p-3 text-center">95</td>
-                        </tr>
-                        <tr class="hover:bg-gray-700/30">
-                            <td class="p-3 font-medium">15 พ.ค. 26</td>
-                            <td class="p-3 text-center text-yellow-400 font-bold">3417</td>
-                            <td class="p-3 text-center">417</td>
-                            <td class="p-3 text-center">34</td>
-                        </tr>
-                        <tr class="hover:bg-gray-700/30">
-                            <td class="p-3 font-medium">13 พ.ค. 26</td>
-                            <td class="p-3 text-center text-yellow-400 font-bold">7804</td>
-                            <td class="p-3 text-center">804</td>
-                            <td class="p-3 text-center">78</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <p class="text-[11px] text-gray-500 mt-2 text-center">*อัปเดตข้อมูลเพื่อใช้คำนวณร่วมกับสถิติแบบถ่วงน้ำหนัก</p>
-        </div>
+<div class="bg-gray-800 rounded-2xl p-6 text-center mb-6">
 
-    </main>
+<h2 class="text-sm text-gray-400 mb-4">
+เลขเด่นประจำวัน
+</h2>
 
-    <!-- Footer -->
-    <footer class="bg-gray-800 border-t border-gray-700 py-3 text-center text-xs text-gray-500">
-        &copy; 2026 Lao Lotto Analytics Mobile App
-    </footer>
+<div class="flex justify-center gap-4">
 
-    <!-- JavaScript สำหรับระบบคำนวณและล็อกรายวัน -->
-    <script>
-        // ฐานข้อมูลสถิติอ้างอิงจากผลลัพธ์ย้อนหลัง (เน้นเลขออกบ่อย 7, 4, 8, 1)
-        const statisticPool = [7, 7, 7, 7, 4, 4, 4, 8, 8, 8, 1, 1, 1, 2, 2, 5, 5, 0, 3, 6, 9];
+<div id="num-1"
+class="w-14 h-14 rounded-full bg-red-500 flex items-center justify-center text-2xl font-bold">
+-
+</div>
 
-        function getWeightedRandomNumber() {
-            const randomIndex = Math.floor(Math.random() * statisticPool.length);
-            return statisticPool[randomIndex];
-        }
+<div id="num-2"
+class="w-14 h-14 rounded-full bg-red-500 flex items-center justify-center text-2xl font-bold">
+-
+</div>
 
-        // ฟังก์ชันจัดรูปแบบวันที่ให้อยู่ในฟอร์แมต YYYY-MM-DD
-        function getTodayString() {
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0');
-            const day = String(today.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
+<div id="num-3"
+class="w-14 h-14 rounded-full bg-red-500 flex items-center justify-center text-2xl font-bold opacity-50">
+-
+</div>
 
-        // ฟังก์ชันตรวจสอบสิทธิ์เมื่อเปิดหน้าเว็บขึ้นมา
-        function checkDailyLimit() {
-            const lastData = localStorage.getItem('laoLotto_last_predict');
-            
-            if (lastData) {
-                const predictInfo = JSON.parse(lastData);
-                const todayStr = getTodayString();
+</div>
 
-                // ถ้างวดที่กดตรงกับวันนี้ ให้ล็อกปุ่มทันทีและดึงค่าเก่ามาโชว์
-                if (predictInfo.date === todayStr) {
-                    document.getElementById('num-1').innerText = predictInfo.n1;
-                    document.getElementById('num-2').innerText = predictInfo.n2;
-                    document.getElementById('num-3').innerText = predictInfo.n3;
-                    
-                    if(predictInfo.n3 === "-") {
-                        document.getElementById('num-3').classList.add('opacity-50');
-                    } else {
-                        document.getElementById('num-3').classList.remove('opacity-50');
-                    }
+<p id="predict-type"
+class="mt-4 text-yellow-400">
+พร้อมวิเคราะห์
+</p>
 
-                    document.getElementById('predict-type').innerText = "🔒 คุณใช้วิเคราะห์ของวันนี้ไปแล้ว กลับมาใหม่วันพรุ่งนี้ครับ";
-                    document.getElementById('predict-type').classList.replace('text-yellow-500', 'text-red-400');
-                    
-                    // ปิดการใช้งานปุ่ม
-                    document.getElementById('btn-2digits').disabled = true;
-                    document.getElementById('btn-3digits').disabled = true;
-                }
-            }
-        }
+</div>
 
-        function predictLaoLotto(digits) {
-            const num1 = document.getElementById('num-1');
-            const num2 = document.getElementById('num-2');
-            const num3 = document.getElementById('num-3');
-            const predictType = document.getElementById('predict-type');
+<button
+id="btn-2digits"
+onclick="predictLaoLotto(2)"
+class="w-full bg-red-600 p-4 rounded-2xl mb-3 font-bold">
 
-            predictType.innerText = "⏳ กำลังประมวลผลสถิติรายวัน...";
-            num1.innerText = "⚡";
-            num2.innerText = "⚡";
-            num3.innerText = digits === 3 ? "⚡" : "-";
+📊 วิเคราะห์เลข 2 ตัว
+(1 ครั้ง/วัน)
 
-            setTimeout(() => {
-                const n1 = getWeightedRandomNumber();
-                const n2 = getWeightedRandomNumber();
-                let n3 = "-";
+</button>
 
-                num1.innerText = n1;
-                num2.innerText = n2;
+<button
+id="btn-3digits"
+onclick="predictLaoLotto(3)"
+class="w-full bg-blue-600 p-4 rounded-2xl font-bold">
 
-                if (digits === 2) {
-                    num3.innerText = "-";
-                    num3.classList.add('opacity-50');
-                } else if (digits === 3) {
-                    n3 = getWeightedRandomNumber();
-                    num3.innerText = n3;
-                    num3.classList.remove('opacity-50');
-                }
+🌟 วิเคราะห์เลข 3 ตัว
+(1 ครั้ง/วัน)
 
-                predictType.innerText = "🔒 บันทึกผลสำเร็จ! ล็อกสิทธิ์การคำนวณสำหรับวันนี้แล้ว";
-                predictType.classList.replace('text-yellow-500', 'text-green-400');
+</button>
 
-                // เซ็ตค่าลงในความจำเครื่อง (LocalStorage)
-                const saveState = {
-                    date: getTodayString(),
-                    n1: n1,
-                    n2: n2,
-                    n3: n3
-                };
-                localStorage.setItem('laoLotto_last_predict', JSON.stringify(saveState));
+</main>
 
-                // ล็อกปุ่มทันที
-                document.getElementById('btn-2digits').disabled = true;
-                document.getElementById('btn-3digits').disabled = true;
+<script>
 
-            }, 1000);
-        }
+const statisticPool=[
+7,7,7,7,
+4,4,4,
+8,8,8,
+1,1,1,
+2,2,
+5,5,
+0,3,6,9
+];
 
-        // รันฟังก์ชันเช็คสิทธิ์ทันทีเมื่อโหลดหน้าเว็บ
-        window.onload = checkDailyLimit;
-    </script>
+function getWeightedRandomNumber(){
+
+const randomIndex=
+Math.floor(
+Math.random()*statisticPool.length
+);
+
+return statisticPool[randomIndex];
+
+}
+
+function getTodayString(){
+
+const today=new Date();
+
+const year=today.getFullYear();
+
+const month=
+String(
+today.getMonth()+1
+).padStart(2,'0');
+
+const day=
+String(
+today.getDate()
+).padStart(2,'0');
+
+return `${year}-${month}-${day}`;
+
+}
+
+
+function displayNumbers(data){
+
+document.getElementById(
+'num-1'
+).innerText=data.n1;
+
+document.getElementById(
+'num-2'
+).innerText=data.n2;
+
+document.getElementById(
+'num-3'
+).innerText=data.n3;
+
+if(data.n3=="-"){
+
+document.getElementById(
+'num-3'
+).classList.add(
+'opacity-50'
+);
+
+}else{
+
+document.getElementById(
+'num-3'
+).classList.remove(
+'opacity-50'
+);
+
+}
+
+}
+
+
+function checkDailyLimit(){
+
+const todayStr=
+getTodayString();
+
+try{
+
+const twoData=
+JSON.parse(
+localStorage.getItem(
+'laoLotto_2digits'
+)
+);
+
+const threeData=
+JSON.parse(
+localStorage.getItem(
+'laoLotto_3digits'
+)
+);
+
+
+if(
+twoData &&
+twoData.date===todayStr
+){
+
+document.getElementById(
+'btn-2digits'
+).disabled=true;
+
+displayNumbers(twoData);
+
+}
+
+
+if(
+threeData &&
+threeData.date===todayStr
+){
+
+document.getElementById(
+'btn-3digits'
+).disabled=true;
+
+displayNumbers(threeData);
+
+}
+
+
+if(
+(twoData &&
+twoData.date===todayStr)
+&&
+(threeData &&
+threeData.date===todayStr)
+){
+
+document.getElementById(
+'predict-type'
+).innerText=
+"🔒 วันนี้ใช้สิทธิ์ครบแล้ว";
+
+}
+
+}catch(error){
+
+localStorage.removeItem(
+'laoLotto_2digits'
+);
+
+localStorage.removeItem(
+'laoLotto_3digits'
+);
+
+}
+
+}
+
+
+function predictLaoLotto(
+digits
+){
+
+const num1=
+document.getElementById(
+'num-1'
+);
+
+const num2=
+document.getElementById(
+'num-2'
+);
+
+const num3=
+document.getElementById(
+'num-3'
+);
+
+const predictType=
+document.getElementById(
+'predict-type'
+);
+
+predictType.innerText=
+"⏳ กำลังวิเคราะห์...";
+
+num1.innerText="⚡";
+num2.innerText="⚡";
+num3.innerText=
+digits===3?"⚡":"-";
+
+
+setTimeout(()=>{
+
+const n1=
+getWeightedRandomNumber();
+
+const n2=
+getWeightedRandomNumber();
+
+let n3="-";
+
+if(digits===3){
+
+n3=
+getWeightedRandomNumber();
+
+}
+
+
+const saveState={
+
+date:getTodayString(),
+
+n1:n1,
+n2:n2,
+n3:n3
+
+};
+
+
+displayNumbers(
+saveState
+);
+
+
+if(digits===2){
+
+localStorage.setItem(
+
+'laoLotto_2digits',
+
+JSON.stringify(
+saveState
+)
+
+);
+
+document.getElementById(
+'btn-2digits'
+).disabled=true;
+
+}
+
+
+if(digits===3){
+
+localStorage.setItem(
+
+'laoLotto_3digits',
+
+JSON.stringify(
+saveState
+)
+
+);
+
+document.getElementById(
+'btn-3digits'
+).disabled=true;
+
+}
+
+
+predictType.innerText=
+"✅ บันทึกเรียบร้อย";
+
+},1000);
+
+}
+
+
+document.addEventListener(
+
+'DOMContentLoaded',
+
+checkDailyLimit
+
+);
+
+</script>
+
 </body>
 </html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lao Lotto Predictor - แอปวิเคราะห์หวยลาว</title>
+    <!-- โหมด Mobile App App-like Experience -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#111827">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Prompt', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col justify-between">
+
+    <!-- Header -->
+    <header class="bg-gray-800 border-b border-gray-700 py-4 shadow-md sticky top-0 z-50">
+        <div class="container mx-auto text-center">
+            <h1 class="text-2xl font-bold text-red-500 tracking-wider">🇱🇦 LAO LOTTO PREDICTOR</h1>
+            <p class="text-xs text-gray-400 mt-1">วิเคราะห์เลขเด่นหวยลาวพัฒนา จากสถิติย้อนหลัง</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 max-w-md flex-grow">
+        
+        <!-- ส่วนแสดงผลตัวเลข -->
+        <div class="bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-700 text-center mb-6">
+            <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-4">เลขเด่นวิเคราะห์จากสถิติงวดนี้</h2>
+            
+            <div class="flex justify-center gap-4 my-6">
+                <!-- วงกลมตัวเลข -->
+                <div id="num-1" class="w-14 h-14 bg-gradient-to-br from-red-500 to-amber-600 rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-lg shadow-red-500/20">-</div>
+                <div id="num-2" class="w-14 h-14 bg-gradient-to-br from-red-500 to-amber-600 rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-lg shadow-red-500/20">-</div>
+                <div id="num-3" class="w-14 h-14 bg-gradient-to-br from-red-500 to-amber-600 rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-lg shadow-red-500/20 opacity-50">-</div>
+            </div>
+
+            <p id="predict-type" class="text-sm text-red-400 font-medium">กดปุ่มด้านล่างเพื่อคำนวณฐานข้อมูลสถิติ</p>
+        </div>
+
+        <!-- ปุ่มควบคุมสำหรับมือถือ (Touch Friendly) -->
+        <div class="space-y-4">
+            <button onclick="predictLaoLotto(2)" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-4 px-4 rounded-2xl shadow-lg transition duration-200 transform active:scale-95 touch-manipulation cursor-pointer text-lg">
+                📊 วิเคราะห์เลขท้าย 2 ตัว (ลาว)
+            </button>
+            <button onclick="predictLaoLotto(3)" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 px-4 rounded-2xl shadow-lg transition duration-200 transform active:scale-95 touch-manipulation cursor-pointer text-lg">
+                🌟 วิเคราะห์เลขท้าย 3 ตัว (ลาว)
+            </button>
+        </div>
+
+        <!-- คำอธิบายระบบสถิติ -->
+        <div class="mt-6 bg-gray-800/60 border border-gray-700 rounded-2xl p-4 text-xs text-gray-400">
+            <h3 class="font-semibold text-gray-300 mb-2">📋 ข้อมูลเชิงสถิติที่ใช้คำนวณ:</h3>
+            <p class="mb-1">• อ้างอิงสถิติการออกรางวัลหวยลาวพัฒนาย้อนหลัง</p>
+            <p class="mb-2">• ตัวเลขที่มีค่าสถิติสูงสุด: <span class="text-red-400 font-bold">7, 4, 8, 1</span> (ระบบจะถ่วงน้ำหนักให้เลขเหล่านี้ออกง่ายขึ้น)</p>
+            <hr class="border-gray-700 my-2">
+            <p class="text-center text-gray-500">หมายเหตุ: เป็นการจำลองเพื่อความบันเทิงเท่านั้น</p>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 border-t border-gray-700 py-3 text-center text-xs text-gray-500">
+        &copy; 2026 Lao Lotto Analytics Mobile App
+    </footer>
+
+    <!-- JavaScript สำหรับระบบสุ่มตามสถิติเก่า -->
+    <script>
+        // 1. ฐานข้อมูลสถิติ: ชุดตัวเลขที่สุ่มอ้างอิงจากเลขที่ออกบ่อยที่สุดในหวยลาวพัฒนา
+        // ยิ่งเลขไหนมีใน Array นี้มาก โอกาสที่จะสุ่มได้เลขนั้นจะยิ่งสูงขึ้น (Weighted Distribution)
+        const statisticPool = [
+            7, 7, 7, 7,  // เลข 7 ออกบ่อยสุด (Weight สูงสุด)
+            4, 4, 4, 
+            8, 8, 8, 
+            1, 1, 1, 
+            2, 2, 
+            5, 5, 
+            0, 3, 6, 9   // เลขอื่นๆ มีเปอร์เซ็นต์เฉลี่ยเท่ากัน
+        ];
+
+        function getWeightedRandomNumber() {
+            // เลือกสุ่มดึงตำแหน่งจาก Pool สถิติเก่า
+            const randomIndex = Math.floor(Math.random() * statisticPool.length);
+            return statisticPool[randomIndex];
+        }
+
+        function predictLaoLotto(digits) {
+            const num1 = document.getElementById('num-1');
+            const num2 = document.getElementById('num-2');
+            const num3 = document.getElementById('num-3');
+            const predictType = document.getElementById('predict-type');
+
+            // หน้าจอโหลดนับถอยหลังจำลองการประมวลผลสถิติ
+            predictType.innerText = "⏳ กำลังดึงประวัติสถิติหวยลาวพัฒนา...";
+            num1.innerText = "⚡";
+            num2.innerText = "⚡";
+            num3.innerText = digits === 3 ? "⚡" : "-";
+            
+            if(digits === 2) {
+                num3.classList.add('opacity-50');
+            } else {
+                num3.classList.remove('opacity-50');
+            }
+
+            // หน่วงเวลาเพื่อให้ผู้ใช้รู้สึกถึงการสุ่มวิเคราะห์จริง
+            setTimeout(() => {
+                const n1 = getWeightedRandomNumber();
+                const n2 = getWeightedRandomNumber();
+                
+                num1.innerText = n1;
+                num2.innerText = n2;
+
+                if (digits === 2) {
+                    num3.innerText = "-";
+                    predictType.innerText = "🇱🇦 วิเคราะห์เสร็จสิ้น: เด่น 2 ตัว (คัดสรรพิเศษ)";
+                } else if (digits === 3) {
+                    const n3 = getWeightedRandomNumber();
+                    num3.innerText = n3;
+                    predictType.innerText = "🇱🇦 วิเคราะห์เสร็จสิ้น: เด่น 3 ตัว (คัดสรรพิเศษ)";
+                }
+            }, 900);
+        }
+    </script>
+</body>
+</html>

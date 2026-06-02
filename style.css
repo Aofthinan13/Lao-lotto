@@ -1,0 +1,5 @@
+body{font-family:Arial,sans-serif;background:#0f172a;color:#fff}
+.container{max-width:1000px;margin:auto;padding:20px}
+input,button{padding:8px;margin:4px}
+table{width:100%;border-collapse:collapse}
+td,th{border:1px solid #555;padding:6px}
